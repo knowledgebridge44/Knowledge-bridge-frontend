@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-academic-bg dark:bg-dark-academic-bg text-academic-text dark:text-dark-academic-text;
+    @apply transition-colors duration-200;
+  }
+
+  h1 {
+    @apply text-4xl font-bold;
+  }
+
+  h2 {
+    @apply text-3xl font-bold;
+  }
+
+  h3 {
+    @apply text-2xl font-semibold;
+  }
+
+  h4 {
+    @apply text-xl font-semibold;
+  }
+
+  h5 {
+    @apply text-lg font-semibold;
+  }
+
+  h6 {
+    @apply text-base font-semibold;
+  }
+
+  p {
+    @apply text-base leading-relaxed;
+  }
+
+  a {
+    @apply text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300;
+    @apply transition-colors duration-150;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium;
+    @apply transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply bg-primary-600 text-white hover:bg-primary-700;
+    @apply dark:bg-primary-500 dark:hover:bg-primary-600;
+    @apply focus:ring-primary-500;
+  }
+
+  .btn-secondary {
+    @apply bg-academic-bg-secondary dark:bg-dark-academic-bg-secondary;
+    @apply text-academic-text dark:text-dark-academic-text;
+    @apply hover:bg-academic-bg-tertiary dark:hover:bg-dark-academic-bg-tertiary;
+    @apply border border-academic-border dark:border-dark-academic-border;
+    @apply focus:ring-primary-500;
+  }
+
+  .btn-danger {
+    @apply bg-red-600 text-white hover:bg-red-700;
+    @apply focus:ring-red-500;
+  }
+
+  .input {
+    @apply w-full px-4 py-2 rounded-lg;
+    @apply bg-white dark:bg-dark-academic-bg-secondary;
+    @apply border border-academic-border dark:border-dark-academic-border;
+    @apply text-academic-text dark:text-dark-academic-text;
+    @apply placeholder-academic-text-muted dark:placeholder-dark-academic-text-muted;
+    @apply transition-colors duration-150;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .card {
+    @apply bg-white dark:bg-dark-academic-bg-secondary;
+    @apply border border-academic-border dark:border-dark-academic-border;
+    @apply rounded-lg shadow-sm;
+    @apply transition-all duration-200;
+  }
+
+  .card-hover {
+    @apply hover:shadow-md hover:border-primary-300 dark:hover:border-primary-700;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-primary {
+    @apply bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-200;
+  }
+
+  .badge-success {
+    @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200;
+  }
+
+  .badge-warning {
+    @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200;
+  }
+
+  .badge-danger {
+    @apply bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200;
+  }
+
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Loading spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Smooth scrolling */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+

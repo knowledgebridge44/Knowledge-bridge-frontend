@@ -3,10 +3,6 @@
 @tailwind utilities;
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-  
   body {
     @apply bg-academic-bg dark:bg-dark-academic-bg text-academic-text dark:text-dark-academic-text;
     @apply transition-colors duration-200;

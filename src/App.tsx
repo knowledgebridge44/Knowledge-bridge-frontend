@@ -16,6 +16,8 @@ import { DashboardPage } from './pages/Dashboard';
 import { CoursesPage } from './pages/Courses';
 import { CourseDetailPage } from './pages/CourseDetail';
 import { LessonDetailPage } from './pages/LessonDetail';
+import { QuestionsPage } from './pages/Questions';
+import { QuestionDetailPage } from './pages/QuestionDetail';
 
 // Create React Query client
 const queryClient = new QueryClient({
@@ -101,9 +103,15 @@ const App: React.FC = () => {
                   path="/questions"
                   element={
                     <AuthGuard>
-                      <div className="container-custom py-8">
-                        <h1 className="text-3xl font-bold">Q&A (Coming Soon)</h1>
-                      </div>
+                      <QuestionsPage />
+                    </AuthGuard>
+                  }
+                />
+                <Route
+                  path="/questions/:id"
+                  element={
+                    <AuthGuard>
+                      <QuestionDetailPage />
                     </AuthGuard>
                   }
                 />

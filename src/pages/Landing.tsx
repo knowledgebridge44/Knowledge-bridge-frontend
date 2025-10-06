@@ -2,8 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/Button';
 import { Card, CardContent } from '@/components/Card';
+import { useAuth } from '@/providers/AuthProvider';
 
 export const LandingPage: React.FC = () => {
+  const { user } = useAuth();
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -21,16 +23,35 @@ export const LandingPage: React.FC = () => {
               answer questions, and build a thriving learning community.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/register">
-                <Button size="lg">
-                  Get Started
-                </Button>
-              </Link>
-              <Link to="/login">
-                <Button variant="secondary" size="lg">
-                  Sign In
-                </Button>
-              </Link>
+              {user ? (
+                // Authenticated user buttons
+                <>
+                  <Link to="/dashboard">
+                    <Button size="lg">
+                      Go to Dashboard
+                    </Button>
+                  </Link>
+                  <Link to="/courses">
+                    <Button variant="secondary" size="lg">
+                      Browse Courses
+                    </Button>
+                  </Link>
+                </>
+              ) : (
+                // Guest user buttons
+                <>
+                  <Link to="/register">
+                    <Button size="lg">
+                      Get Started
+                    </Button>
+                  </Link>
+                  <Link to="/login">
+                    <Button variant="secondary" size="lg">
+                      Sign In
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -89,17 +110,44 @@ export const LandingPage: React.FC = () => {
       {/* CTA Section */}
       <section className="py-20 bg-primary-600 dark:bg-primary-700">
         <div className="container-custom text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Start Learning?
-          </h2>
-          <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
-            Join thousands of students and teachers on Knowledge Bridge today.
-          </p>
-          <Link to="/register">
-            <Button size="lg" variant="secondary">
-              Create Free Account
-            </Button>
-          </Link>
+          {user ? (
+            // Authenticated user CTA
+            <>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                Welcome back, {user.name}!
+              </h2>
+              <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
+                Continue your learning journey and explore new courses.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link to="/courses">
+                  <Button size="lg" variant="secondary">
+                    Explore Courses
+                  </Button>
+                </Link>
+                <Link to="/questions">
+                  <Button size="lg" variant="secondary">
+                    Browse Q&A
+                  </Button>
+                </Link>
+              </div>
+            </>
+          ) : (
+            // Guest user CTA
+            <>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+                Ready to Start Learning?
+              </h2>
+              <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
+                Join thousands of students and teachers on Knowledge Bridge today.
+              </p>
+              <Link to="/register">
+                <Button size="lg" variant="secondary">
+                  Create Free Account
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
       </section>
 
@@ -112,5 +160,6 @@ export const LandingPage: React.FC = () => {
     </div>
   );
 };
+
 
 

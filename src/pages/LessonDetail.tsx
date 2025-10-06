@@ -21,6 +21,9 @@ export const LessonDetailPage = () => {
   const { data: comments } = useComments(lessonId);
   const { data: ratings } = useRatings(lessonId);
   
+  // Check if this is a preview lesson (first lesson of a course)
+  const isPreviewLesson = lesson?.course && !lesson.course.enrolled;
+  
   const createComment = useCreateComment();
   const deleteComment = useDeleteComment();
   const createRating = useCreateRating();
@@ -134,25 +137,27 @@ export const LessonDetailPage = () => {
         <span className="text-academic-text dark:text-dark-academic-text">{lesson.title}</span>
       </div>
 
+      {/* Preview Banner */}
+      {isPreviewLesson && (
+        <Card className="mb-6 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
+          <div className="p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              <span className="font-semibold text-blue-900 dark:text-blue-100">Preview Lesson</span>
+            </div>
+            <p className="text-blue-700 dark:text-blue-300 text-sm">
+              This is a preview of the first lesson. Enroll in the course to access all lessons and materials.
+            </p>
+          </div>
+        </Card>
+      )}
+
       {/* Lesson Content */}
       <Card className="mb-6">
         <div className="flex items-start justify-between mb-4">
-          <div className="flex-1">
-            <h1 className="text-3xl font-bold mb-4">{lesson.title}</h1>
-            {lesson.status && (
-              <span
-                className={`inline-block px-3 py-1 rounded-full text-xs font-medium mb-4 ${
-                  lesson.status === 'approved'
-                    ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                    : lesson.status === 'pending'
-                    ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
-                    : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
-                }`}
-              >
-                {lesson.status}
-              </span>
-            )}
-          </div>
+          <h1 className="text-3xl font-bold">{lesson.title}</h1>
           
           {/* Rating Display */}
           <div className="text-right">
@@ -213,7 +218,7 @@ export const LessonDetailPage = () => {
                   size="sm"
                   onClick={() => handleDownloadMaterial(material.id, material.file_path || material.title)}
                   disabled={downloadingMaterial === material.id}
-                  loading={downloadingMaterial === material.id}
+                  isLoading={downloadingMaterial === material.id}
                 >
                   <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -276,7 +281,7 @@ export const LessonDetailPage = () => {
             variant="primary"
             onClick={handleRatingSubmit}
             disabled={selectedRating === 0 || createRating.isPending || updateRating.isPending}
-            loading={createRating.isPending || updateRating.isPending}
+            isLoading={createRating.isPending || updateRating.isPending}
           >
             {userRating ? 'Update Rating' : 'Submit Rating'}
           </Button>
@@ -302,7 +307,7 @@ export const LessonDetailPage = () => {
               type="submit"
               variant="primary"
               disabled={!commentContent.trim() || createComment.isPending}
-              loading={createComment.isPending}
+              isLoading={createComment.isPending}
             >
               Post Comment
             </Button>
@@ -351,7 +356,40 @@ export const LessonDetailPage = () => {
           </p>
         )}
       </Card>
+
+      {/* Enrollment CTA for Preview Users */}
+      {isPreviewLesson && lesson.course && (
+        <Card className="mt-6 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800">
+          <div className="p-6 text-center">
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <svg className="w-8 h-8 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <h3 className="text-xl font-semibold text-blue-900 dark:text-blue-100">
+                Enjoying this lesson?
+              </h3>
+            </div>
+            <p className="text-blue-700 dark:text-blue-300 mb-6 max-w-2xl mx-auto">
+              This is just the beginning! Enroll in <strong>{lesson.course.title}</strong> to access all lessons, 
+              materials, and join the community discussion.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link to={`/courses/${lesson.course.id}`}>
+                <Button variant="primary" size="lg">
+                  Enroll in Course
+                </Button>
+              </Link>
+              <Link to="/courses">
+                <Button variant="outline" size="lg">
+                  Browse More Courses
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </Card>
+      )}
     </div>
   );
 };
+
 

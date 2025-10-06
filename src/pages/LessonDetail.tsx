@@ -9,7 +9,8 @@ import { Card } from '@/components/Card';
 import { Input } from '@/components/Input';
 import { TextArea } from '@/components/TextArea';
 import { useAuth } from '@/providers/AuthProvider';
-import { useToast } from '@/hooks/useToast';
+import { useToast } from '@/providers/ToastProvider';
+import { Material, Comment } from '@/types';
 
 export const LessonDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -196,7 +197,7 @@ export const LessonDetailPage = () => {
         <Card className="mb-6">
           <h2 className="text-xl font-bold mb-4">Materials</h2>
           <div className="space-y-2">
-            {materials.data.map((material) => (
+            {materials.data.map((material: Material) => (
               <div
                 key={material.id}
                 className="flex items-center justify-between p-3 bg-academic-bg-secondary dark:bg-dark-academic-bg-secondary rounded-lg"
@@ -215,7 +216,7 @@ export const LessonDetailPage = () => {
                   </div>
                 </div>
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   size="sm"
                   onClick={() => handleDownloadMaterial(material.id, material.file_path || material.title)}
                   disabled={downloadingMaterial === material.id}
@@ -317,7 +318,7 @@ export const LessonDetailPage = () => {
         {/* Comments List */}
         {comments && comments.data && comments.data.length > 0 ? (
           <div className="space-y-4">
-            {comments.data.map((comment) => (
+            {comments.data.map((comment: Comment) => (
               <div
                 key={comment.id}
                 className="p-4 bg-academic-bg-secondary dark:bg-dark-academic-bg-secondary rounded-lg"
@@ -380,7 +381,7 @@ export const LessonDetailPage = () => {
                 </Button>
               </Link>
               <Link to="/courses">
-                <Button variant="outline" size="lg">
+                <Button variant="secondary" size="lg">
                   Browse More Courses
                 </Button>
               </Link>

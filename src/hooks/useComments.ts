@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { commentsApi } from '@/api';
-import { useToast } from './useToast';
+import { useToast } from '@/providers/ToastProvider';
 
 export const useComments = (lessonId: number) => {
   return useQuery({
@@ -24,7 +24,13 @@ export const useCreateComment = () => {
       toast.success('Comment posted successfully');
     },
     onError: (error: any) => {
-      toast.error(error.message || 'Failed to post comment');
+      console.log('Comment error caught:', error);
+      console.log('Error status:', error.status);
+      if (error.status === 403) {
+        toast.error('You must be enrolled in this course to post comments');
+      } else {
+        toast.error(error.message || 'Failed to post comment');
+      }
     },
   });
 };

@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ratingsApi } from '@/api';
-import { useToast } from './useToast';
+import { useToast } from '@/providers/ToastProvider';
 
 export const useRatings = (lessonId: number) => {
   return useQuery({
@@ -25,7 +25,13 @@ export const useCreateRating = () => {
       toast.success('Rating submitted successfully');
     },
     onError: (error: any) => {
-      toast.error(error.message || 'Failed to submit rating');
+      console.log('Rating error caught:', error);
+      console.log('Error status:', error.status);
+      if (error.status === 403) {
+        toast.error('You must be enrolled in this course to rate lessons');
+      } else {
+        toast.error(error.message || 'Failed to submit rating');
+      }
     },
   });
 };
@@ -43,7 +49,13 @@ export const useUpdateRating = () => {
       toast.success('Rating updated successfully');
     },
     onError: (error: any) => {
-      toast.error(error.message || 'Failed to update rating');
+      console.log('Rating update error caught:', error);
+      console.log('Error status:', error.status);
+      if (error.status === 403) {
+        toast.error('You must be enrolled in this course to rate lessons');
+      } else {
+        toast.error(error.message || 'Failed to update rating');
+      }
     },
   });
 };

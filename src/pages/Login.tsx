@@ -4,7 +4,7 @@ import { useAuth } from '@/providers/AuthProvider';
 import { Button } from '@/components/Button';
 import { Input } from '@/components/Input';
 import { Card, CardContent } from '@/components/Card';
-import { useToast } from '@/hooks/useToast';
+import { useToast } from '@/providers/ToastProvider';
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');

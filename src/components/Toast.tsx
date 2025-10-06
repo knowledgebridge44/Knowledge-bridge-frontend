@@ -1,5 +1,5 @@
 import React from 'react';
-import { Toast as ToastType } from '@/hooks/useToast';
+import { Toast as ToastType } from '@/providers/ToastProvider';
 import { clsx } from 'clsx';
 
 interface ToastProps {

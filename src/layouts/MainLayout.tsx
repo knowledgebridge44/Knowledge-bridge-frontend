@@ -1,14 +1,14 @@
 import React, { ReactNode } from 'react';
 import { TopNav } from '@/components/TopNav';
 import { ToastContainer } from '@/components/Toast';
-import { useToastManager } from '@/hooks/useToast';
+import { useToastContext } from '@/providers/ToastProvider';
 
 interface MainLayoutProps {
   children: ReactNode;
 }
 
 export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
-  const { toasts, removeToast } = useToastManager();
+  const { toasts, removeToast } = useToastContext();
 
   return (
     <div className="min-h-screen bg-academic-bg dark:bg-dark-academic-bg">

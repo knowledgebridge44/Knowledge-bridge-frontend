@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { coursesApi } from '@/api';
 import { Course } from '@/types';
-import { useToast } from './useToast';
+import { useToast } from '@/providers/ToastProvider';
 
 export const useCourses = (page = 1, perPage = 10) => {
   return useQuery({

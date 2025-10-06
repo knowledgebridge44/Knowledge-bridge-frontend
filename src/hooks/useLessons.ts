@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { lessonsApi } from '@/api';
 import { LessonFormData } from '@/types';
-import { useToast } from './useToast';
+import { useToast } from '@/providers/ToastProvider';
 
 export const useLesson = (id: number) => {
   return useQuery({

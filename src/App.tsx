@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { AuthProvider } from './providers/AuthProvider';
 import { ThemeProvider } from './providers/ThemeProvider';
+import { ToastProvider } from './providers/ToastProvider';
 import { MainLayout } from './layouts/MainLayout';
 import { AuthGuard, GuestGuard, RoleGuard } from './router/guards';
 import { initializeAuth } from './api/axios';
@@ -39,10 +40,11 @@ const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <BrowserRouter>
-          <AuthProvider>
-            <MainLayout>
-              <Routes>
+        <ToastProvider>
+          <BrowserRouter>
+            <AuthProvider>
+              <MainLayout>
+                <Routes>
                 {/* Public Routes */}
                 <Route path="/" element={<LandingPage />} />
 
@@ -155,10 +157,11 @@ const App: React.FC = () => {
                     </div>
                   }
                 />
-              </Routes>
-            </MainLayout>
-          </AuthProvider>
-        </BrowserRouter>
+                </Routes>
+              </MainLayout>
+            </AuthProvider>
+          </BrowserRouter>
+        </ToastProvider>
       </ThemeProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

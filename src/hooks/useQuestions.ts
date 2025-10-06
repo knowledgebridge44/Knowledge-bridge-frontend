@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { questionsApi } from '@/api';
-import { useToast } from './useToast';
+import { useToast } from '@/providers/ToastProvider';
 
 export const useQuestions = (page = 1, perPage = 20) => {
   return useQuery({

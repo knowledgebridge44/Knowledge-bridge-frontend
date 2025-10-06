@@ -48,6 +48,7 @@ export interface Material {
   lesson_id: number;
   lesson?: Lesson;
   title: string;
+  description?: string;
   file_path: string;
   file_type: string;
   file_size: number;

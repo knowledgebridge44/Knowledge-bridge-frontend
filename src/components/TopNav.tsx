@@ -1,18 +1,46 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/providers/AuthProvider';
 import { useTheme } from '@/providers/ThemeProvider';
 import { Button } from './Button';
+import { clsx } from 'clsx';
 
 export const TopNav: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     await logout();
     navigate('/login');
+  };
+
+  // Helper function to check if a link is active
+  const isActive = (path: string) => {
+    if (path === '/') return location.pathname === '/';
+    return location.pathname.startsWith(path);
+  };
+
+  // Get nav link classes
+  const getNavLinkClasses = (path: string) => {
+    return clsx(
+      'text-sm font-medium transition-colors',
+      isActive(path)
+        ? 'text-primary-600 dark:text-primary-400 border-b-2 border-primary-600 dark:border-primary-400 pb-1'
+        : 'text-academic-text-secondary dark:text-dark-academic-text-secondary hover:text-primary-600 dark:hover:text-primary-400'
+    );
+  };
+
+  // Get mobile nav link classes
+  const getMobileNavLinkClasses = (path: string) => {
+    return clsx(
+      'block px-3 py-2 rounded-lg transition-colors font-medium',
+      isActive(path)
+        ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400'
+        : 'text-academic-text-secondary dark:text-dark-academic-text-secondary hover:bg-academic-bg-tertiary dark:hover:bg-dark-academic-bg-tertiary hover:text-primary-600 dark:hover:text-primary-400'
+    );
   };
 
   return (
@@ -31,17 +59,17 @@ export const TopNav: React.FC = () => {
           <div className="hidden md:flex items-center gap-6">
             {isAuthenticated ? (
               <>
-                <Link to="/dashboard" className="text-sm font-medium hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                <Link to="/dashboard" className={getNavLinkClasses('/dashboard')}>
                   Dashboard
                 </Link>
-                <Link to="/courses" className="text-sm font-medium hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                <Link to="/courses" className={getNavLinkClasses('/courses')}>
                   Courses
                 </Link>
-                <Link to="/questions" className="text-sm font-medium hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                <Link to="/questions" className={getNavLinkClasses('/questions')}>
                   Q&A
                 </Link>
                 {user?.role === 'admin' && (
-                  <Link to="/admin" className="text-sm font-medium hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                  <Link to="/admin" className={getNavLinkClasses('/admin')}>
                     Admin
                   </Link>
                 )}
@@ -162,21 +190,21 @@ export const TopNav: React.FC = () => {
               <>
                 <Link
                   to="/dashboard"
-                  className="block px-3 py-2 rounded-lg hover:bg-academic-bg-tertiary dark:hover:bg-dark-academic-bg-tertiary transition-colors"
+                  className={getMobileNavLinkClasses('/dashboard')}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Dashboard
                 </Link>
                 <Link
                   to="/courses"
-                  className="block px-3 py-2 rounded-lg hover:bg-academic-bg-tertiary dark:hover:bg-dark-academic-bg-tertiary transition-colors"
+                  className={getMobileNavLinkClasses('/courses')}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Courses
                 </Link>
                 <Link
                   to="/questions"
-                  className="block px-3 py-2 rounded-lg hover:bg-academic-bg-tertiary dark:hover:bg-dark-academic-bg-tertiary transition-colors"
+                  className={getMobileNavLinkClasses('/questions')}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Q&A
@@ -184,7 +212,7 @@ export const TopNav: React.FC = () => {
                 {user?.role === 'admin' && (
                   <Link
                     to="/admin"
-                    className="block px-3 py-2 rounded-lg hover:bg-academic-bg-tertiary dark:hover:bg-dark-academic-bg-tertiary transition-colors"
+                    className={getMobileNavLinkClasses('/admin')}
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Admin
@@ -192,7 +220,7 @@ export const TopNav: React.FC = () => {
                 )}
                 <Link
                   to="/profile"
-                  className="block px-3 py-2 rounded-lg hover:bg-academic-bg-tertiary dark:hover:bg-dark-academic-bg-tertiary transition-colors"
+                  className={getMobileNavLinkClasses('/profile')}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Profile

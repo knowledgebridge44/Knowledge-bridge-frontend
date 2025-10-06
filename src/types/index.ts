@@ -206,3 +206,4 @@ export type Theme = 'light' | 'dark';
 // Route guard types
 export type UserRole = 'admin' | 'teacher' | 'student';
 
+

@@ -18,7 +18,7 @@ export const useCreateRating = () => {
 
   return useMutation({
     mutationFn: ({ lessonId, rating }: { lessonId: number; rating: number }) =>
-      ratingsApi.create({ lesson_id: lessonId, rating }),
+      ratingsApi.create(lessonId, rating),
     onSuccess: (_, { lessonId }) => {
       queryClient.invalidateQueries({ queryKey: ['ratings', lessonId] });
       queryClient.invalidateQueries({ queryKey: ['lesson', lessonId] });
@@ -36,7 +36,7 @@ export const useUpdateRating = () => {
 
   return useMutation({
     mutationFn: ({ id, rating, lessonId }: { id: number; rating: number; lessonId: number }) =>
-      ratingsApi.update(id, { rating }),
+      ratingsApi.update(id, rating),
     onSuccess: (_, { lessonId }) => {
       queryClient.invalidateQueries({ queryKey: ['ratings', lessonId] });
       queryClient.invalidateQueries({ queryKey: ['lesson', lessonId] });

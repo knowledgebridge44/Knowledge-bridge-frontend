@@ -18,7 +18,7 @@ export const useCreateComment = () => {
 
   return useMutation({
     mutationFn: ({ lessonId, content }: { lessonId: number; content: string }) =>
-      commentsApi.create({ lesson_id: lessonId, content }),
+      commentsApi.createForLesson(lessonId, { content }),
     onSuccess: (_, { lessonId }) => {
       queryClient.invalidateQueries({ queryKey: ['comments', lessonId] });
       toast.success('Comment posted successfully');
@@ -34,11 +34,11 @@ export const useUpdateComment = () => {
   const toast = useToast();
 
   return useMutation({
-    mutationFn: ({ id, content }: { id: number; content: string }) =>
+    mutationFn: ({ id, content }: { id: number; content: string; lessonId?: number }) =>
       commentsApi.update(id, { content }),
-    onSuccess: (data) => {
-      if (data.lesson_id) {
-        queryClient.invalidateQueries({ queryKey: ['comments', data.lesson_id] });
+    onSuccess: (_, { lessonId }) => {
+      if (lessonId) {
+        queryClient.invalidateQueries({ queryKey: ['comments', lessonId] });
       }
       toast.success('Comment updated successfully');
     },

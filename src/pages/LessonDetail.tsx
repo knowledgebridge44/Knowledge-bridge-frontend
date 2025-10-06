@@ -7,6 +7,7 @@ import { useRatings, useCreateRating, useUpdateRating } from '@/hooks/useRatings
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Input } from '@/components/Input';
+import { TextArea } from '@/components/TextArea';
 import { useAuth } from '@/providers/AuthProvider';
 import { useToast } from '@/hooks/useToast';
 
@@ -294,12 +295,11 @@ export const LessonDetailPage = () => {
         
         {/* Comment Form */}
         <form onSubmit={handleCommentSubmit} className="mb-6">
-          <Input
+          <TextArea
             label="Add a comment"
             value={commentContent}
             onChange={(e) => setCommentContent(e.target.value)}
             placeholder="Share your thoughts..."
-            multiline
             rows={3}
           />
           <div className="mt-2">

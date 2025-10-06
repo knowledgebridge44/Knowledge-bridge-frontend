@@ -1,4 +1,4 @@
-import { api } from '../axios';
+import { api, fetchCsrfToken } from '../axios';
 import { User, LoginCredentials, RegisterData, ApiResponse } from '@/types';
 
 /**
@@ -15,14 +15,16 @@ export const authApi = {
 
   // Login
   login: async (credentials: LoginCredentials): Promise<User> => {
-    const response = await api.post<ApiResponse<{ user: User }>>('/api/login', credentials);
-    return response.data.data!.user;
+    await fetchCsrfToken();
+    const response = await api.post<ApiResponse<User>>('/api/login', credentials);
+    return response.data.data!;
   },
 
   // Register
   register: async (data: RegisterData): Promise<User> => {
-    const response = await api.post<ApiResponse<{ user: User }>>('/api/register', data);
-    return response.data.data!.user;
+    await fetchCsrfToken();
+    const response = await api.post<ApiResponse<User>>('/api/register', data);
+    return response.data.data!;
   },
 
   // Logout
@@ -30,4 +32,5 @@ export const authApi = {
     await api.post('/api/logout');
   },
 };
+
 

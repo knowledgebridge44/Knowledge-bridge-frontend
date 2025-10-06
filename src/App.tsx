@@ -13,6 +13,8 @@ import { LandingPage } from './pages/Landing';
 import { LoginPage } from './pages/Login';
 import { RegisterPage } from './pages/Register';
 import { DashboardPage } from './pages/Dashboard';
+import { CoursesPage } from './pages/Courses';
+import { CourseDetailPage } from './pages/CourseDetail';
 
 // Create React Query client
 const queryClient = new QueryClient({
@@ -69,14 +71,12 @@ const App: React.FC = () => {
                   }
                 />
 
-                {/* Placeholder routes - to be implemented */}
+                {/* Courses Routes */}
                 <Route
                   path="/courses"
                   element={
                     <AuthGuard>
-                      <div className="container-custom py-8">
-                        <h1 className="text-3xl font-bold">Courses (Coming Soon)</h1>
-                      </div>
+                      <CoursesPage />
                     </AuthGuard>
                   }
                 />
@@ -84,9 +84,7 @@ const App: React.FC = () => {
                   path="/courses/:id"
                   element={
                     <AuthGuard>
-                      <div className="container-custom py-8">
-                        <h1 className="text-3xl font-bold">Course Detail (Coming Soon)</h1>
-                      </div>
+                      <CourseDetailPage />
                     </AuthGuard>
                   }
                 />

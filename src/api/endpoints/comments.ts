@@ -6,6 +6,18 @@ import { Comment, CommentFormData, ApiResponse } from '@/types';
  */
 
 export const commentsApi = {
+  // Get comments for a lesson
+  getByLesson: async (lessonId: number): Promise<{ data: Comment[] }> => {
+    const response = await api.get(`/api/lessons/${lessonId}/comments`);
+    return response.data;
+  },
+
+  // Get comments for a question
+  getByQuestion: async (questionId: number): Promise<{ data: Comment[] }> => {
+    const response = await api.get(`/api/questions/${questionId}/comments`);
+    return response.data;
+  },
+
   // Get comment
   get: async (id: number): Promise<Comment> => {
     const response = await api.get<ApiResponse<Comment>>(`/api/comments/${id}`);

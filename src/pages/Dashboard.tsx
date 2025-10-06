@@ -1,11 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/providers/AuthProvider';
+import { useCourses } from '@/hooks/useCourses';
+import { useQuestions } from '@/hooks/useQuestions';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/Card';
 import { Button } from '@/components/Button';
 
 export const DashboardPage: React.FC = () => {
   const { user } = useAuth();
+  const { data: coursesData } = useCourses(1, 100); // Fetch all courses
+  const { data: questionsData } = useQuestions(1, 100); // Fetch questions
+  
+  // Count enrolled courses
+  const enrolledCoursesCount = coursesData?.data?.filter(course => course.enrolled)?.length || 0;
+  
+  // Count user's questions
+  const userQuestionsCount = questionsData?.data?.filter(q => q.user_id === user?.id)?.length || 0;
 
   return (
     <div className="container-custom py-8">
@@ -22,7 +32,7 @@ export const DashboardPage: React.FC = () => {
             <CardTitle as="h3">My Courses</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-primary-600 dark:text-primary-400 mb-2">0</div>
+            <div className="text-3xl font-bold text-primary-600 dark:text-primary-400 mb-2">{enrolledCoursesCount}</div>
             <p className="text-sm text-academic-text-secondary dark:text-dark-academic-text-secondary mb-4">
               Enrolled courses
             </p>
@@ -39,7 +49,7 @@ export const DashboardPage: React.FC = () => {
             <CardTitle as="h3">Questions</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-2">0</div>
+            <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-2">{userQuestionsCount}</div>
             <p className="text-sm text-academic-text-secondary dark:text-dark-academic-text-secondary mb-4">
               Questions asked
             </p>
@@ -136,5 +146,7 @@ export const DashboardPage: React.FC = () => {
     </div>
   );
 };
+
+
 
 

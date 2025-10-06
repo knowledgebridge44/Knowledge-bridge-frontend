@@ -12,6 +12,7 @@ export const CourseDetailPage = () => {
   const enrollMutation = useEnrollCourse();
   const unenrollMutation = useUnenrollCourse();
 
+
   const handleEnroll = () => {
     enrollMutation.mutate(courseId);
   };
@@ -91,10 +92,38 @@ export const CourseDetailPage = () => {
                 </div>
               )}
 
-              {course.lessons && (
+              {course.lessons_count !== undefined && (
                 <div>
                   <div className="text-xs text-academic-text-muted dark:text-dark-academic-text-muted">Lessons</div>
-                  <div className="font-medium">{course.lessons.length}</div>
+                  <div className="font-medium">{course.lessons_count}</div>
+                </div>
+              )}
+
+              {/* Rating Display */}
+              {(course.average_rating !== undefined || course.ratings_count !== undefined) && (
+                <div>
+                  <div className="text-xs text-academic-text-muted dark:text-dark-academic-text-muted">Rating</div>
+                  <div className="flex items-center gap-1">
+                    <div className="flex items-center">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <svg
+                          key={star}
+                          className={`w-4 h-4 ${
+                            star <= (course.average_rating || 0)
+                              ? 'text-yellow-500'
+                              : 'text-gray-300 dark:text-gray-600'
+                          }`}
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <span className="text-sm font-medium">
+                      {course.average_rating?.toFixed(1) || '0.0'} ({course.ratings_count || 0})
+                    </span>
+                  </div>
                 </div>
               )}
 
@@ -122,10 +151,10 @@ export const CourseDetailPage = () => {
             <div className="flex flex-col gap-2">
               {course.enrolled ? (
                 <Button
-                  variant="outline"
+                  variant="secondary"
                   onClick={handleUnenroll}
                   disabled={unenrollMutation.isPending}
-                  loading={unenrollMutation.isPending}
+                  isLoading={unenrollMutation.isPending}
                 >
                   Unenroll from Course
                 </Button>
@@ -134,7 +163,7 @@ export const CourseDetailPage = () => {
                   variant="primary"
                   onClick={handleEnroll}
                   disabled={enrollMutation.isPending}
-                  loading={enrollMutation.isPending}
+                  isLoading={enrollMutation.isPending}
                 >
                   Enroll in Course
                 </Button>
@@ -145,7 +174,7 @@ export const CourseDetailPage = () => {
       </Card>
 
       {/* Lessons List */}
-      {course.enrolled && course.lessons && course.lessons.length > 0 ? (
+      {course.lessons && course.lessons.length > 0 ? (
         <div>
           <h2 className="text-2xl font-bold mb-4">Course Lessons</h2>
           <div className="space-y-3">
@@ -157,26 +186,18 @@ export const CourseDetailPage = () => {
                       {index + 1}
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold mb-1">{lesson.title}</h3>
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="font-semibold">{lesson.title}</h3>
+                        {!course.enrolled && index === 0 && (
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
+                            Preview
+                          </span>
+                        )}
+                      </div>
                       {lesson.content && (
                         <p className="text-sm text-academic-text-secondary dark:text-dark-academic-text-secondary line-clamp-2">
                           {lesson.content}
                         </p>
-                      )}
-                    </div>
-                    <div className="flex-shrink-0">
-                      {lesson.status && (
-                        <span
-                          className={`px-3 py-1 rounded-full text-xs font-medium ${
-                            lesson.status === 'approved'
-                              ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                              : lesson.status === 'pending'
-                              ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
-                              : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
-                          }`}
-                        >
-                          {lesson.status}
-                        </span>
                       )}
                     </div>
                     <svg className="w-5 h-5 text-academic-text-muted dark:text-dark-academic-text-muted" fill="currentColor" viewBox="0 0 20 20">
@@ -187,40 +208,47 @@ export const CourseDetailPage = () => {
               </Link>
             ))}
           </div>
+          
+          {/* Show enrollment CTA for non-enrolled users */}
+          {!course.enrolled && user?.role === 'student' && (
+            <Card className="mt-6 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
+              <div className="p-6 text-center">
+                <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100 mb-2">
+                  Want to see more lessons?
+                </h3>
+                <p className="text-blue-700 dark:text-blue-300 mb-4">
+                  Enroll in this course to access all lessons and materials
+                </p>
+                <Button
+                  variant="primary"
+                  onClick={handleEnroll}
+                  disabled={enrollMutation.isPending}
+                  isLoading={enrollMutation.isPending}
+                >
+                  Enroll Now
+                </Button>
+              </div>
+            </Card>
+          )}
         </div>
-      ) : !course.enrolled && user?.role === 'student' ? (
-        <Card>
-          <div className="text-center py-12">
-            <svg className="w-16 h-16 mx-auto text-primary-600 dark:text-primary-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-            </svg>
-            <h3 className="text-xl font-semibold mb-2">Enroll to access lessons</h3>
-            <p className="text-academic-text-secondary dark:text-dark-academic-text-secondary mb-6">
-              You need to enroll in this course to view its lessons and materials
-            </p>
-            <Button
-              variant="primary"
-              onClick={handleEnroll}
-              disabled={enrollMutation.isPending}
-              loading={enrollMutation.isPending}
-            >
-              Enroll Now
-            </Button>
-          </div>
-        </Card>
       ) : (
-        <Card>
-          <div className="text-center py-12">
-            <svg className="w-16 h-16 mx-auto text-academic-text-muted dark:text-dark-academic-text-muted mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-            </svg>
-            <p className="text-academic-text-secondary dark:text-dark-academic-text-secondary">
-              No lessons available yet
-            </p>
-          </div>
-        </Card>
+        <div>
+          <h2 className="text-2xl font-bold mb-4">Course Lessons</h2>
+          <Card>
+            <div className="text-center py-12">
+              <svg className="w-16 h-16 mx-auto text-academic-text-muted dark:text-dark-academic-text-muted mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+              <p className="text-academic-text-secondary dark:text-dark-academic-text-secondary">
+                No lessons available yet
+              </p>
+            </div>
+          </Card>
+        </div>
       )}
     </div>
   );
 };
+
+
 

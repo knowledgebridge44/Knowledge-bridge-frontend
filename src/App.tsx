@@ -15,6 +15,7 @@ import { RegisterPage } from './pages/Register';
 import { DashboardPage } from './pages/Dashboard';
 import { CoursesPage } from './pages/Courses';
 import { CourseDetailPage } from './pages/CourseDetail';
+import { LessonDetailPage } from './pages/LessonDetail';
 
 // Create React Query client
 const queryClient = new QueryClient({
@@ -92,9 +93,7 @@ const App: React.FC = () => {
                   path="/lessons/:id"
                   element={
                     <AuthGuard>
-                      <div className="container-custom py-8">
-                        <h1 className="text-3xl font-bold">Lesson Detail (Coming Soon)</h1>
-                      </div>
+                      <LessonDetailPage />
                     </AuthGuard>
                   }
                 />

@@ -12,6 +12,7 @@ export { commentsApi } from './endpoints/comments';
 export { materialsApi } from './endpoints/materials';
 export { ratingsApi } from './endpoints/ratings';
 export { analyticsApi } from './endpoints/analytics';
+export { reportsApi } from './endpoints/reports';
 
 
 

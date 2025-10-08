@@ -60,7 +60,7 @@ export interface Question {
   id: number;
   user_id: number;
   user?: User;
-  lesson_id: number;
+  lesson_id: number | null;
   lesson?: Lesson;
   title: string;
   content: string;
@@ -94,12 +94,12 @@ export interface Rating {
 
 export interface Report {
   id: number;
-  reporter_id: number;
-  reporter?: User;
-  reportable_type: 'lesson' | 'question' | 'comment';
-  reportable_id: number;
+  user_id: number;
+  user?: User;
+  target_type: 'lesson' | 'question' | 'comment';
+  target_id: number;
   reason: string;
-  status: 'pending' | 'resolved' | 'dismissed';
+  status: 'open' | 'resolved' | 'dismissed';
   created_at: string;
   updated_at: string;
 }

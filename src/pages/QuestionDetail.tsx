@@ -5,6 +5,7 @@ import { useDeleteComment } from '@/hooks/useComments';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
 import { Input } from '@/components/Input';
+import { ReportButton } from '@/components/ReportButton';
 import { useAuth } from '@/providers/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 
@@ -97,7 +98,12 @@ export const QuestionDetailPage = () => {
       {/* Question Card */}
       <Card className="mb-6">
         <div className="flex items-start justify-between mb-4">
-          <h1 className="text-3xl font-bold flex-1">{question.title}</h1>
+          <div className="flex items-center gap-3 flex-1">
+            <h1 className="text-3xl font-bold">{question.title}</h1>
+            {question.user_id !== user?.id && (
+              <ReportButton targetType="question" targetId={question.id} />
+            )}
+          </div>
           {question.user_id === user?.id && (
             <Button
               variant="outline"
@@ -204,15 +210,20 @@ export const QuestionDetailPage = () => {
                       </div>
                     </div>
                   </div>
-                  {comment.user_id === user?.id && (
-                    <button
-                      onClick={() => deleteComment.mutate({ id: comment.id, lessonId: 0 })}
-                      className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 text-sm"
-                      disabled={deleteComment.isPending}
-                    >
-                      Delete
-                    </button>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {comment.user_id !== user?.id && (
+                      <ReportButton targetType="comment" targetId={comment.id} />
+                    )}
+                    {comment.user_id === user?.id && (
+                      <button
+                        onClick={() => deleteComment.mutate({ id: comment.id, lessonId: 0 })}
+                        className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 text-sm"
+                        disabled={deleteComment.isPending}
+                      >
+                        Delete
+                      </button>
+                    )}
+                  </div>
                 </div>
                 <p className="text-academic-text-secondary dark:text-dark-academic-text-secondary whitespace-pre-wrap">
                   {comment.content}

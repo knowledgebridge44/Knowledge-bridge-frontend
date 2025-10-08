@@ -16,9 +16,15 @@ import { RegisterPage } from './pages/Register';
 import { DashboardPage } from './pages/Dashboard';
 import { CoursesPage } from './pages/Courses';
 import { CourseDetailPage } from './pages/CourseDetail';
+import { CreateCoursePage } from './pages/CreateCourse';
 import { LessonDetailPage } from './pages/LessonDetail';
+import { CreateLessonPage } from './pages/CreateLesson';
 import { QuestionsPage } from './pages/Questions';
 import { QuestionDetailPage } from './pages/QuestionDetail';
+import { PendingLessonsPage } from './pages/admin/PendingLessons';
+import { AnalyticsPage } from './pages/admin/Analytics';
+import { ReportsPage } from './pages/admin/Reports';
+import { ProfilePage } from './pages/Profile';
 
 // Create React Query client
 const queryClient = new QueryClient({
@@ -86,10 +92,30 @@ const App: React.FC = () => {
                   }
                 />
                 <Route
+                  path="/courses/create"
+                  element={
+                    <AuthGuard>
+                      <RoleGuard allowedRoles={['teacher']}>
+                        <CreateCoursePage />
+                      </RoleGuard>
+                    </AuthGuard>
+                  }
+                />
+                <Route
                   path="/courses/:id"
                   element={
                     <AuthGuard>
                       <CourseDetailPage />
+                    </AuthGuard>
+                  }
+                />
+                <Route
+                  path="/lessons/create"
+                  element={
+                    <AuthGuard>
+                      <RoleGuard allowedRoles={['teacher']}>
+                        <CreateLessonPage />
+                      </RoleGuard>
                     </AuthGuard>
                   }
                 />
@@ -121,14 +147,42 @@ const App: React.FC = () => {
                   path="/profile"
                   element={
                     <AuthGuard>
-                      <div className="container-custom py-8">
-                        <h1 className="text-3xl font-bold">Profile (Coming Soon)</h1>
-                      </div>
+                      <ProfilePage />
                     </AuthGuard>
                   }
                 />
 
                 {/* Admin Routes */}
+                <Route
+                  path="/admin/pending-lessons"
+                  element={
+                    <AuthGuard>
+                      <RoleGuard allowedRoles={['admin']}>
+                        <PendingLessonsPage />
+                      </RoleGuard>
+                    </AuthGuard>
+                  }
+                />
+                <Route
+                  path="/admin/analytics"
+                  element={
+                    <AuthGuard>
+                      <RoleGuard allowedRoles={['admin']}>
+                        <AnalyticsPage />
+                      </RoleGuard>
+                    </AuthGuard>
+                  }
+                />
+                <Route
+                  path="/admin/reports"
+                  element={
+                    <AuthGuard>
+                      <RoleGuard allowedRoles={['admin']}>
+                        <ReportsPage />
+                      </RoleGuard>
+                    </AuthGuard>
+                  }
+                />
                 <Route
                   path="/admin/*"
                   element={

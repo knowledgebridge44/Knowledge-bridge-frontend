@@ -6,8 +6,8 @@ import { useComments, useCreateComment, useDeleteComment } from '@/hooks/useComm
 import { useRatings, useCreateRating, useUpdateRating } from '@/hooks/useRatings';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
-import { Input } from '@/components/Input';
 import { TextArea } from '@/components/TextArea';
+import { ReportButton } from '@/components/ReportButton';
 import { useAuth } from '@/providers/AuthProvider';
 import { useToast } from '@/providers/ToastProvider';
 import { Material, Comment } from '@/types';
@@ -159,7 +159,12 @@ export const LessonDetailPage = () => {
       {/* Lesson Content */}
       <Card className="mb-6">
         <div className="flex items-start justify-between mb-4">
-          <h1 className="text-3xl font-bold">{lesson.title}</h1>
+          <div className="flex-1">
+            <div className="flex items-center gap-3">
+              <h1 className="text-3xl font-bold">{lesson.title}</h1>
+              <ReportButton targetType="lesson" targetId={lesson.id} />
+            </div>
+          </div>
           
           {/* Rating Display */}
           <div className="text-right">
@@ -335,15 +340,20 @@ export const LessonDetailPage = () => {
                       </div>
                     </div>
                   </div>
-                  {comment.user_id === user?.id && (
-                    <button
-                      onClick={() => deleteComment.mutate({ id: comment.id, lessonId })}
-                      className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 text-sm"
-                      disabled={deleteComment.isPending}
-                    >
-                      Delete
-                    </button>
-                  )}
+                  <div className="flex items-center gap-2">
+                    {comment.user_id !== user?.id && (
+                      <ReportButton targetType="comment" targetId={comment.id} />
+                    )}
+                    {comment.user_id === user?.id && (
+                      <button
+                        onClick={() => deleteComment.mutate({ id: comment.id, lessonId })}
+                        className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 text-sm"
+                        disabled={deleteComment.isPending}
+                      >
+                        Delete
+                      </button>
+                    )}
+                  </div>
                 </div>
                 <p className="text-academic-text-secondary dark:text-dark-academic-text-secondary whitespace-pre-wrap">
                   {comment.content}

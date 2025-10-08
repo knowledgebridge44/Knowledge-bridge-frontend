@@ -57,6 +57,7 @@ api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const status = error.response?.status;
+    const config = error.config;
 
     if (status === 419) {
       try {
@@ -69,7 +70,9 @@ api.interceptors.response.use(
       }
     }
 
-    if (status === 401 && !window.location.pathname.includes('/login')) {
+    // Only redirect to login if 401 and NOT on auth-related pages
+    const isAuthEndpoint = config?.url?.includes('/login') || config?.url?.includes('/register');
+    if (status === 401 && !window.location.pathname.includes('/login') && !isAuthEndpoint) {
       window.location.href = '/login';
     }
 

@@ -11,6 +11,7 @@ export const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [generalError, setGeneralError] = useState('');
 
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ export const LoginPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
+    setGeneralError('');
     setIsLoading(true);
 
     try {
@@ -29,10 +31,18 @@ export const LoginPage: React.FC = () => {
       toast.success('Welcome back!');
       navigate(from, { replace: true });
     } catch (error: any) {
-      if (error.errors) {
+      console.log('Login error:', error);
+      
+      // Handle validation errors (field-specific)
+      if (error.errors && Object.keys(error.errors).length > 0) {
         setErrors(error.errors);
+        setGeneralError('Please check your input and try again');
+        toast.error('Please check your input and try again');
       } else {
-        toast.error(error.message || 'Login failed');
+        // Handle general errors (wrong credentials, server errors, etc.)
+        const errorMessage = error.message || 'Login failed. Please try again.';
+        setGeneralError(errorMessage);
+        toast.error(errorMessage);
       }
     } finally {
       setIsLoading(false);
@@ -52,6 +62,18 @@ export const LoginPage: React.FC = () => {
         <Card>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* General Error Display */}
+              {generalError && (
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                    <p className="text-sm text-red-800 dark:text-red-200">{generalError}</p>
+                  </div>
+                </div>
+              )}
+
               <Input
                 type="email"
                 label="Email Address"

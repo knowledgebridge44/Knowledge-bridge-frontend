@@ -88,7 +88,7 @@ export const useCreateQuestionComment = () => {
 
   return useMutation({
     mutationFn: ({ questionId, content }: { questionId: number; content: string }) =>
-      commentsApi.create({ question_id: questionId, content }),
+      commentsApi.createForQuestion(questionId, { content }),
     onSuccess: (_, { questionId }) => {
       queryClient.invalidateQueries({ queryKey: ['questionComments', questionId] });
       toast.success('Answer posted successfully');

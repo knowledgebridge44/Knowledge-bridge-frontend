@@ -1,12 +1,50 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useMemo } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useQuestions } from '@/hooks/useQuestions';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
+import { useAuth } from '@/providers/AuthProvider';
 
 export const QuestionsPage = () => {
+  const { user } = useAuth();
+  const [searchParams] = useSearchParams();
+  const filterTeacher = searchParams.get('teacher'); // 'me' means current teacher's questions
   const [page, setPage] = useState(1);
-  const { data, isLoading, isError, error } = useQuestions(page, 20);
+  const { data, isLoading, isError, error } = useQuestions(page, 100); // Fetch more for client-side filtering
+
+  // Filter questions based on query parameter
+  const filteredQuestions = useMemo(() => {
+    const allQuestions = data?.data || [];
+    
+    if (filterTeacher === 'me' && user?.role === 'teacher') {
+      // For teachers: show questions on their lessons + general questions
+      return allQuestions.filter(q => {
+        // General questions (no lesson association)
+        if (!q.lesson_id) return true;
+        
+        // Questions on teacher's lessons
+        if (q.lesson?.course) {
+          const courseTeacherId = (q.lesson.course as any).teacher_id || (q.lesson.course as any).created_by;
+          return courseTeacherId === user?.id;
+        }
+        
+        return false;
+      });
+    } else if (filterTeacher === 'me' && user?.role === 'student') {
+      // For students: show their own questions + general questions
+      return allQuestions.filter(q => {
+        // Their own questions
+        if (q.user_id === user.id) return true;
+        
+        // General questions (no lesson association)
+        if (!q.lesson_id) return true;
+        
+        return false;
+      });
+    }
+    
+    return allQuestions;
+  }, [data?.data, filterTeacher, user]);
 
   if (isLoading) {
     return (
@@ -39,17 +77,24 @@ export const QuestionsPage = () => {
     );
   }
 
-  const questions = data?.data || [];
+  const questions = filteredQuestions;
   const pagination = data?.meta;
+
+  const pageTitle = filterTeacher === 'me' 
+    ? (user?.role === 'teacher' ? 'My Students\' Questions' : 'My Questions')
+    : 'Q&A Forum';
+  const pageDescription = filterTeacher === 'me' 
+    ? (user?.role === 'teacher' ? 'Answer questions from students in your courses' : 'Your questions and general forum questions')
+    : 'Ask questions and help others learn';
 
   return (
     <div className="container-custom py-8">
       {/* Header */}
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Q&A Forum</h1>
+          <h1 className="text-3xl font-bold mb-2">{pageTitle}</h1>
           <p className="text-academic-text-secondary dark:text-dark-academic-text-secondary">
-            Ask questions and help others learn
+            {pageDescription}
           </p>
         </div>
       </div>

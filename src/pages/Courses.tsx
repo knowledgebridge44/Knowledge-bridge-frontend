@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useCourses, useEnrollCourse, useUnenrollCourse } from '@/hooks/useCourses';
 import { CourseCard } from '@/components/CourseCard';
 import { Button } from '@/components/Button';
@@ -6,10 +7,23 @@ import { useAuth } from '@/providers/AuthProvider';
 
 export const CoursesPage = () => {
   const { user } = useAuth();
+  const [searchParams] = useSearchParams();
+  const filterTeacher = searchParams.get('teacher'); // 'me' means current user's courses
   const [page, setPage] = useState(1);
-  const { data, isLoading, isError, error } = useCourses(page, 12);
+  const { data, isLoading, isError, error } = useCourses(page, 100); // Fetch more for client-side filtering
   const enrollMutation = useEnrollCourse();
   const unenrollMutation = useUnenrollCourse();
+
+  // Filter courses based on query parameter
+  const filteredCourses = useMemo(() => {
+    const allCourses = data?.data || [];
+    if (filterTeacher === 'me' && user) {
+      return allCourses.filter(course => 
+        course.teacher_id === user.id || (course as any).created_by === user.id
+      );
+    }
+    return allCourses;
+  }, [data?.data, filterTeacher, user]);
 
   const handleEnroll = (courseId: number) => {
     enrollMutation.mutate(courseId);
@@ -52,16 +66,21 @@ export const CoursesPage = () => {
     );
   }
 
-  const courses = data?.data || [];
+  const courses = filteredCourses;
   const pagination = data?.meta;
+
+  const pageTitle = filterTeacher === 'me' ? 'My Courses' : 'Browse Courses';
+  const pageDescription = filterTeacher === 'me' 
+    ? 'Manage and view your created courses'
+    : 'Explore our collection of courses and start learning today';
 
   return (
     <div className="container-custom py-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Browse Courses</h1>
+        <h1 className="text-3xl font-bold mb-2">{pageTitle}</h1>
         <p className="text-academic-text-secondary dark:text-dark-academic-text-secondary">
-          Explore our collection of courses and start learning today
+          {pageDescription}
         </p>
       </div>
 

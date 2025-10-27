@@ -1,5 +1,5 @@
 import { api } from '../axios';
-import { Report, ApiResponse, PaginatedResponse } from '@/types';
+import { Report } from '@/types';
 
 /**
  * Reports API endpoints

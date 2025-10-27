@@ -59,7 +59,7 @@ export const useDeleteComment = () => {
   const toast = useToast();
 
   return useMutation({
-    mutationFn: ({ id, lessonId }: { id: number; lessonId: number }) =>
+    mutationFn: ({ id }: { id: number; lessonId: number }) =>
       commentsApi.delete(id),
     onSuccess: (_, { lessonId }) => {
       queryClient.invalidateQueries({ queryKey: ['comments', lessonId] });

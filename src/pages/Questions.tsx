@@ -78,7 +78,7 @@ export const QuestionsPage = () => {
   }
 
   const questions = filteredQuestions;
-  const pagination = data?.meta;
+  const pagination = data;
 
   const pageTitle = filterTeacher === 'me' 
     ? (user?.role === 'teacher' ? 'My Students\' Questions' : 'My Questions')

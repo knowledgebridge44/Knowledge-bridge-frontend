@@ -41,7 +41,7 @@ export const useUpdateRating = () => {
   const toast = useToast();
 
   return useMutation({
-    mutationFn: ({ id, rating, lessonId }: { id: number; rating: number; lessonId: number }) =>
+    mutationFn: ({ id, rating }: { id: number; rating: number; lessonId: number }) =>
       ratingsApi.update(id, rating),
     onSuccess: (_, { lessonId }) => {
       queryClient.invalidateQueries({ queryKey: ['ratings', lessonId] });
@@ -65,7 +65,7 @@ export const useDeleteRating = () => {
   const toast = useToast();
 
   return useMutation({
-    mutationFn: ({ id, lessonId }: { id: number; lessonId: number }) =>
+    mutationFn: ({ id }: { id: number; lessonId: number }) =>
       ratingsApi.delete(id),
     onSuccess: (_, { lessonId }) => {
       queryClient.invalidateQueries({ queryKey: ['ratings', lessonId] });

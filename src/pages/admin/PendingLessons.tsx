@@ -15,7 +15,7 @@ export const PendingLessonsPage: React.FC = () => {
   const [previewModalOpen, setPreviewModalOpen] = useState(false);
 
   const lessons = data?.data || [];
-  const meta = data?.meta;
+  const meta = data;
 
   const handleApprove = (lessonId: number) => {
     if (confirm('Are you sure you want to approve this lesson?')) {

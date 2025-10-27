@@ -11,7 +11,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: '../backend_laravel/public/frontend',
+    outDir: 'dist',
     emptyOutDir: true,
     manifest: true,
     rollupOptions: {

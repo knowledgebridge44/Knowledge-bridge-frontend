@@ -67,7 +67,7 @@ export const CoursesPage = () => {
   }
 
   const courses = filteredCourses;
-  const pagination = data?.meta;
+  const pagination = data;
 
   const pageTitle = filterTeacher === 'me' ? 'My Courses' : 'Browse Courses';
   const pageDescription = filterTeacher === 'me' 

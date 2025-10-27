@@ -6,6 +6,12 @@ import { Material, ApiResponse } from '@/types';
  */
 
 export const materialsApi = {
+  // Get materials for a lesson
+  getByLesson: async (lessonId: number): Promise<{ data: Material[] }> => {
+    const response = await api.get(`/api/lessons/${lessonId}/materials`);
+    return response.data;
+  },
+
   // Upload material for lesson (teacher only)
   upload: async (lessonId: number, data: FormData): Promise<Material> => {
     const response = await api.post<ApiResponse<Material>>(

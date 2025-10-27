@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useReports, useUpdateReport, useDeleteReport } from '@/hooks/useReports';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/Card';
+import { Card, CardContent } from '@/components/Card';
 import { Button } from '@/components/Button';
-import { Report } from '@/types';
 
 export const ReportsPage: React.FC = () => {
   const { data: reports, isLoading, isError, error } = useReports();

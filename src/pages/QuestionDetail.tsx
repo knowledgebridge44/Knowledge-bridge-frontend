@@ -4,7 +4,7 @@ import { useQuestion, useQuestionComments, useCreateQuestionComment, useDeleteQu
 import { useDeleteComment } from '@/hooks/useComments';
 import { Button } from '@/components/Button';
 import { Card } from '@/components/Card';
-import { Input } from '@/components/Input';
+import { TextArea } from '@/components/TextArea';
 import { ReportButton } from '@/components/ReportButton';
 import { useAuth } from '@/providers/AuthProvider';
 import { useNavigate } from 'react-router-dom';
@@ -168,12 +168,11 @@ export const QuestionDetailPage = () => {
         <Card className="mb-6">
           <h3 className="text-lg font-semibold mb-4">Your Answer</h3>
           <form onSubmit={handleAnswerSubmit}>
-            <Input
+            <TextArea
               label=""
               value={answerContent}
               onChange={(e) => setAnswerContent(e.target.value)}
               placeholder="Write your answer here..."
-              multiline
               rows={4}
             />
             <div className="mt-3">

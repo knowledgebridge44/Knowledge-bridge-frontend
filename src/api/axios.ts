@@ -20,7 +20,7 @@ let csrfTokenPromise: Promise<void> | null = null;
 
 export const fetchCsrfToken = async (): Promise<void> => {
   if (!csrfTokenPromise) {
-    csrfTokenPromise = api.get('/sanctum/csrf-cookie').then((response) => {
+    csrfTokenPromise = api.get('/sanctum/csrf-cookie').then(() => {
       csrfTokenPromise = null;
     }).catch((error) => {
       csrfTokenPromise = null;
